@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
+import { Nunito_Sans } from 'next/font/google'
 import './globals.css'
+
+const nunitoSans = Nunito_Sans({
+  subsets: ['vietnamese']
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <body className={nunitoSans.className}>{children}</body>
     </html>
   )
 }
