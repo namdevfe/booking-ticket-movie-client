@@ -1,12 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { CalendarIcon, Loader2 } from 'lucide-react'
-import { format } from 'date-fns'
-
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Card,
   CardContent,
@@ -15,20 +10,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import { Calendar } from '@/components/ui/calendar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover'
 import {
   Form,
   FormControl,
@@ -38,11 +19,29 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
-import Link from 'next/link'
-import { RegisterPayload } from '@/types/auth-type'
-import { registerSchema } from '@/validations/auth-validation'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
 import authService from '@/services/auth-service'
+import { RegisterPayload } from '@/types/auth-type'
+import { registerSchema } from '@/validations/auth-validation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { CalendarIcon, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 const defaultValues = {
   email: '',
@@ -115,6 +114,7 @@ const RegisterForm = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 disabled={isLoading}
                 control={form.control}
@@ -198,7 +198,6 @@ const RegisterForm = () => {
             />
 
             <FormField
-              disabled={isLoading}
               control={form.control}
               name='dateOfBirth'
               render={({ field }) => (
@@ -208,6 +207,7 @@ const RegisterForm = () => {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          disabled={isLoading}
                           variant={'outline'}
                           className={`w-full pl-3 text-left font-normal ${
                             !field.value && 'text-muted-foreground'
@@ -250,7 +250,7 @@ const RegisterForm = () => {
         <p className='text-sm text-muted-foreground'>
           Already have an account?{' '}
           <Link href='/login' className='text-primary hover:underline'>
-            Sign in
+            Login
           </Link>
         </p>
       </CardFooter>
