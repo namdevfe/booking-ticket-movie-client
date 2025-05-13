@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 
 import { Button } from '@/components/ui/button'
@@ -43,50 +42,41 @@ import Link from 'next/link'
 import { RegisterPayload } from '@/types/auth-type'
 import { registerSchema } from '@/validations/auth-validation'
 import { toast } from '@/hooks/use-toast'
+import authService from '@/services/auth-service'
+
+const defaultValues = {
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: ''
+}
 
 const RegisterForm = () => {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const form = useForm<RegisterPayload>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: ''
-    }
+    defaultValues
   })
 
   async function onSubmit(data: RegisterPayload) {
     setIsLoading(true)
-
     const payload = { ...data }
 
     try {
-      const res = await fetch('http://localhost:8017/api/v1/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw data
-      }
+      const res = await authService.register(payload)
 
       toast({
         title: 'Registration successful!',
-        description: data.message
+        description: res.message
       })
 
-      console.log('🚀data---->', data)
-
-      // Redirect to login page or dashboard
-      // router.push('/login')
+      // Reset form
+      form.reset({
+        ...defaultValues,
+        gender: undefined as any,
+        dateOfBirth: undefined
+      })
     } catch (error: any) {
       toast({
         description: error.message,
@@ -112,6 +102,7 @@ const RegisterForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             <div className='grid grid-cols-2 gap-4'>
               <FormField
+                disabled={isLoading}
                 control={form.control}
                 name='firstName'
                 render={({ field }) => (
@@ -125,6 +116,7 @@ const RegisterForm = () => {
                 )}
               />
               <FormField
+                disabled={isLoading}
                 control={form.control}
                 name='lastName'
                 render={({ field }) => (
@@ -140,6 +132,7 @@ const RegisterForm = () => {
             </div>
 
             <FormField
+              disabled={isLoading}
               control={form.control}
               name='email'
               render={({ field }) => (
@@ -158,13 +151,14 @@ const RegisterForm = () => {
             />
 
             <FormField
+              disabled={isLoading}
               control={form.control}
               name='password'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type='password' {...field} />
+                    <Input type='password' placeholder='Password' {...field} />
                   </FormControl>
                   <FormDescription>
                     Must be at least 6 characters
@@ -177,29 +171,34 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name='gender'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select gender' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='male'>Male</SelectItem>
-                      <SelectItem value='female'>Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value === undefined ? '' : field.value}
+                      defaultValue={field.value}
+                      disabled={isLoading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select gender' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='male'>Male</SelectItem>
+                        <SelectItem value='female'>Female</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
             />
 
             <FormField
+              disabled={isLoading}
               control={form.control}
               name='dateOfBirth'
               render={({ field }) => (
@@ -241,7 +240,8 @@ const RegisterForm = () => {
             />
 
             <Button type='submit' className='w-full' disabled={isLoading}>
-              {isLoading ? 'Registering...' : 'Register'}
+              {isLoading && <Loader2 className='animate-spin' />}
+              Register
             </Button>
           </form>
         </Form>

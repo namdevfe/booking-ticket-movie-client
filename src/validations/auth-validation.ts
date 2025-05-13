@@ -1,5 +1,7 @@
-import { Gender } from '@/types/auth-type'
+import { Gender } from '@/constants/global'
 import { z } from 'zod'
+
+const genderEnum = z.enum(['male', 'female'])
 
 export const registerSchema = z.object({
   email: z
@@ -29,6 +31,7 @@ export const registerSchema = z.object({
   gender: z.enum([Gender.MALE, Gender.FEMALE], {
     required_error: 'Please select a gender'
   }),
+
   dateOfBirth: z.date({
     required_error: 'Please select a date of birth'
   })
