@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 const nunitoSans = Nunito_Sans({
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang='en'>
       <body suppressHydrationWarning className={nunitoSans.className}>
         {children}
+        <Toaster />
       </body>
     </html>
   )
