@@ -10,6 +10,18 @@ const authService = {
   login(payload: LoginPayload) {
     const url = '/auth/login'
     return http.post<ApiResponse<LoginRes>>(url, payload)
+  },
+  auth(payload: { accessToken: string; refreshToken: string }) {
+    const url = '/api/auth'
+    return http.post<any>(url, payload, { baseUrl: '' })
+  },
+  getProfile(accessToken: string) {
+    const url = '/auth/profile'
+    return http.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
   }
 }
 

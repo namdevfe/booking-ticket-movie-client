@@ -49,12 +49,28 @@ const LoginForm = () => {
       const res = await authService.login(payload)
 
       if (!!res.data) {
-        toast({
-          description: res.message
-        })
+        // Save token to localStorage
+        localStorage.setItem(
+          'accessToken',
+          JSON.stringify(res.data.accessToken)
+        )
+        localStorage.setItem(
+          'refreshToken',
+          JSON.stringify(res.data.refreshToken)
+        )
 
-        // Reset form
-        form.reset(defaultValues)
+        // Set cookies on next server
+        const resFromNextServer: { statusCode: number; message: string } =
+          await authService.auth(res.data)
+
+        if (resFromNextServer.statusCode === 200) {
+          toast({
+            description: res.message
+          })
+
+          // Reset form
+          form.reset(defaultValues)
+        }
       }
     } catch (error: any) {
       toast({
