@@ -4,13 +4,18 @@ import { cookies } from 'next/headers'
 
 const ProfilePage = async () => {
   const cookieStore = cookies()
-  const accessToken = cookieStore.get('accessToken')?.value
-  const profile: any = await authService.getProfile(accessToken as string)
+  const accessToken = cookieStore.get('accessToken')
+    ? cookieStore.get('accessToken')?.value
+    : null
+
+  if (!accessToken) return null
+
+  const profile: any = await authService.getProfile(accessToken)
 
   return (
     <div>
-      <div>Hello, {profile?.data?.email}</div>
-      <ProfileClient></ProfileClient>
+      Xin chào, {profile?.data?.email}
+      <ProfileClient />
     </div>
   )
 }

@@ -2,6 +2,10 @@ type FetchOptions = RequestInit & {
   baseUrl?: string
 }
 
+// Check client
+export const isClient = typeof window !== 'undefined'
+
+// Fetch wrapper
 const request = async <Response>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
@@ -14,10 +18,20 @@ const request = async <Response>(
   // Buid body
   const body = options.body ? JSON.stringify(options.body) : undefined
 
+  // Get accessToken from client
+  const accessToken = isClient
+    ? JSON.parse(localStorage.getItem('accessToken') as string)
+    : null
+
   // Build headers
   const baseHeaders = {
-    'Content-Type': 'application/json',
-    ...options.headers
+    ...options.headers,
+    'Content-Type': 'application/json'
+  } as any
+
+  // Auto assign accessToken when request on client-side
+  if (isClient && accessToken) {
+    baseHeaders.Authorization = `Bearer ${accessToken}`
   }
 
   // /auth/login || auth/login

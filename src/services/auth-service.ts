@@ -15,13 +15,18 @@ const authService = {
     const url = '/api/auth'
     return http.post<any>(url, payload, { baseUrl: '' })
   },
-  getProfile(accessToken: string) {
+  getProfile(accessToken?: string) {
     const url = '/auth/profile'
-    return http.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    })
+    return http.get(
+      url,
+      accessToken
+        ? {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          }
+        : undefined
+    )
   }
 }
 
