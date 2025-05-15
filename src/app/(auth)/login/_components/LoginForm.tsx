@@ -25,6 +25,7 @@ import { loginSchema } from '@/validations/auth-validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -34,6 +35,7 @@ const defaultValues = {
 }
 
 const LoginForm = () => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const form = useForm<LoginPayload>({
@@ -70,6 +72,8 @@ const LoginForm = () => {
 
           // Reset form
           form.reset(defaultValues)
+
+          router.push('/')
         }
       }
     } catch (error: any) {

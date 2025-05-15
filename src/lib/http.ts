@@ -1,3 +1,7 @@
+import { HTTP_STATUS_CODES } from '@/constants/http-status-code'
+import { ApiResponse } from '@/types/global'
+import { redirect } from 'next/navigation'
+
 type FetchOptions = RequestInit & {
   baseUrl?: string
 }
@@ -46,13 +50,20 @@ const request = async <Response>(
     method
   })
 
-  const data = await res.json()
+  const data = (await res.json()) as Response
 
   if (!res.ok) {
+    // if (
+    //   res.status === HTTP_STATUS_CODES.UNAUTHORIZED ||
+    //   res.status === HTTP_STATUS_CODES.FORBIDDEN
+    // ) {
+    // } else {
+    //   throw data
+    // }
     throw data
   }
 
-  return data as Response
+  return data
 }
 
 const http = {

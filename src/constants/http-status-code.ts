@@ -1,0 +1,4 @@
+export const HTTP_STATUS_CODES = {
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403
+}

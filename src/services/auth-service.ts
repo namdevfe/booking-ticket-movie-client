@@ -1,6 +1,7 @@
 import http from '@/lib/http'
 import { LoginPayload, LoginRes, RegisterPayload } from '@/types/auth-type'
 import { ApiResponse } from '@/types/global'
+import { User } from '@/types/user-type'
 
 const authService = {
   register(payload: RegisterPayload) {
@@ -17,7 +18,7 @@ const authService = {
   },
   getProfile(accessToken?: string) {
     const url = '/auth/profile'
-    return http.get(
+    return http.get<ApiResponse<User>>(
       url,
       accessToken
         ? {
