@@ -46,6 +46,14 @@ const authService = {
   verifyEmail(token: string) {
     const url = `/auth/verify-email?verifyToken=${token}`
     return http.get<ApiResponse>(url)
+  },
+  refreshToken(payload: { refreshToken: string }) {
+    const url = '/auth/refresh-token'
+    return http.post<ApiResponse<LoginRes>>(url, payload)
+  },
+  refreshTokenFromNextClientToNextServer() {
+    const url = '/api/auth/refresh-token'
+    return http.post<ApiResponse<LoginRes>>(url, null, { baseUrl: '' })
   }
 }
 

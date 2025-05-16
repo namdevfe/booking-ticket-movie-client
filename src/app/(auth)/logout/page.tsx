@@ -24,7 +24,10 @@ const LogoutPage = () => {
       }
     }
 
-    if (accessToken === JSON.parse(localStorage.getItem('accessToken') ?? '')) {
+    const rawAccessToken = localStorage.getItem('accessToken')
+    const localAccessToken = rawAccessToken ? JSON.parse(rawAccessToken) : null
+
+    if (accessToken === localAccessToken) {
       handleLogout()
     }
   }, [accessToken, pathname, router])
