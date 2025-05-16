@@ -12,6 +12,20 @@ const authService = {
     const url = '/auth/login'
     return http.post<ApiResponse<LoginRes>>(url, payload)
   },
+  logout(payload: { refreshToken: string }) {
+    const url = '/auth/logout'
+    return http.put<ApiResponse>(url, payload)
+  },
+  logoutFromNextServer() {
+    const url = '/api/auth/logout'
+    return http.post<ApiResponse>(
+      url,
+      {},
+      {
+        baseUrl: ''
+      }
+    )
+  },
   auth(payload: { accessToken: string; refreshToken: string }) {
     const url = '/api/auth'
     return http.post<any>(url, payload, { baseUrl: '' })

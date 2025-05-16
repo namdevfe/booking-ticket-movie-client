@@ -53,13 +53,28 @@ const request = async <Response>(
   const data = (await res.json()) as Response
 
   if (!res.ok) {
-    // if (
-    //   res.status === HTTP_STATUS_CODES.UNAUTHORIZED ||
-    //   res.status === HTTP_STATUS_CODES.FORBIDDEN
-    // ) {
-    // } else {
-    //   throw data
-    // }
+    if (res.status === HTTP_STATUS_CODES.UNAUTHORIZED) {
+      // Token expired on client-side
+      if (isClient) {
+        // Handle logout
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            ...baseHeaders
+          }
+        })
+
+        // Clear toke on localStorage
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+
+        // Redirect to login page
+        location.href = '/login'
+      } else {
+        const accessToken = baseHeaders?.Authorization?.split(' ')?.[1]
+        redirect(`/logout?accessToken=${accessToken}`)
+      }
+    }
     throw data
   }
 
