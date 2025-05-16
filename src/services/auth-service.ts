@@ -42,6 +42,10 @@ const authService = {
           }
         : undefined
     )
+  },
+  verifyEmail(token: string) {
+    const url = `/auth/verify-email?verifyToken=${token}`
+    return http.get<ApiResponse>(url)
   }
 }
 
