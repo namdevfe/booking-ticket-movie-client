@@ -6,10 +6,12 @@ export async function POST() {
 
   const refreshToken = cookieStore.get('refreshToken')?.value
 
+  let res: Record<string, any> = {}
+
   if (refreshToken) {
     try {
       const payload = { refreshToken }
-      const res = await authService.refreshToken(payload)
+      res = await authService.refreshToken(payload)
 
       if (res.data) {
         cookieStore.set('accessToken', res.data?.accessToken, {
@@ -25,11 +27,11 @@ export async function POST() {
           sameSite: 'lax',
           path: '/'
         })
-
-        return Response.json(res)
       }
     } catch (error) {
       console.log('Error from api route refresh-token', error)
     }
   }
+
+  return Response.json(res)
 }

@@ -1,5 +1,10 @@
 import http from '@/lib/http'
-import { LoginPayload, LoginRes, RegisterPayload } from '@/types/auth-type'
+import {
+  LoginPayload,
+  LoginRes,
+  RegisterPayload,
+  RetryActivePayload
+} from '@/types/auth-type'
 import { ApiResponse } from '@/types/global'
 import { User } from '@/types/user-type'
 
@@ -54,6 +59,10 @@ const authService = {
   refreshTokenFromNextClientToNextServer() {
     const url = '/api/auth/refresh-token'
     return http.post<ApiResponse<LoginRes>>(url, null, { baseUrl: '' })
+  },
+  retryActive(payload: RetryActivePayload) {
+    const url = '/auth/retry-active'
+    return http.post<ApiResponse>(url, payload)
   }
 }
 

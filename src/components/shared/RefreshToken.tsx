@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import authService from '@/services/auth-service'
 
-const BUFFER_TIME = 1000
+const BUFFER_TIME = 3 * 60 * 1000
 
 const RefreshToken = () => {
   useEffect(() => {

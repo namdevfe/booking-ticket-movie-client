@@ -1,4 +1,8 @@
-import { loginSchema, registerSchema } from '@/validations/auth-validation'
+import {
+  loginSchema,
+  registerSchema,
+  retryActiveSchema
+} from '@/validations/auth-validation'
 import { z } from 'zod'
 
 export type RegisterPayload = z.infer<typeof registerSchema>
@@ -9,3 +13,5 @@ export type LoginRes = {
   accessToken: string
   refreshToken: string
 }
+
+export type RetryActivePayload = z.infer<typeof retryActiveSchema>

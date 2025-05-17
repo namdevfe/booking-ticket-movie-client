@@ -1,5 +1,6 @@
 'use client'
 
+import AccountActivation from '@/app/(auth)/login/_components/AccountActivation'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -18,6 +19,7 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { HTTP_STATUS_CODES } from '@/constants/http-status-code'
 import { toast } from '@/hooks/use-toast'
 import authService from '@/services/auth-service'
 import { LoginPayload } from '@/types/auth-type'
@@ -37,13 +39,15 @@ const defaultValues = {
 const LoginForm = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isShowResendVerifyEmail, setIsShowResendVerifyEmail] =
+    useState<boolean>(false)
 
   const form = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
     defaultValues
   })
 
-  async function onSubmit(data: LoginPayload) {
+  const onSubmit = async (data: LoginPayload) => {
     setIsLoading(true)
     const payload = { ...data }
 
@@ -77,6 +81,11 @@ const LoginForm = () => {
         }
       }
     } catch (error: any) {
+      // Account inactived
+      if (error.statusCode === HTTP_STATUS_CODES.FORBIDDEN) {
+        setIsShowResendVerifyEmail(true)
+      }
+
       toast({
         description: error.message,
         variant: 'destructive'
@@ -86,69 +95,88 @@ const LoginForm = () => {
     }
   }
 
+  /** Events handler */
+  const handleCloseResendVerifyEmail = (isOpen: boolean) => {
+    setIsShowResendVerifyEmail(isOpen)
+  }
+
   return (
-    <Card className='w-full max-w-md'>
-      <CardHeader className='space-y-1'>
-        <CardTitle className='text-2xl font-bold text-center'>
-          Login to system
-        </CardTitle>
-        <CardDescription className='text-center'>
-          Enter your information to login
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            <FormField
-              disabled={isLoading}
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='email'
-                      placeholder='example@gmail.com'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <>
+      <Card className='w-full max-w-md'>
+        <CardHeader className='space-y-1'>
+          <CardTitle className='text-2xl font-bold text-center'>
+            Login to system
+          </CardTitle>
+          <CardDescription className='text-center'>
+            Enter your information to login
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              <FormField
+                disabled={isLoading}
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='email'
+                        placeholder='example@gmail.com'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              disabled={isLoading}
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type='password' placeholder='Password' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                disabled={isLoading}
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='password'
+                        placeholder='Password'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Button type='submit' className='w-full' disabled={isLoading}>
-              {isLoading && <Loader2 className='animate-spin' />}
-              Login
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className='flex justify-center'>
-        <p className='text-sm text-muted-foreground'>
-          Do you not have an account?{' '}
-          <Link href='/register' className='text-primary hover:underline'>
-            Register
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+              <Button type='submit' className='w-full' disabled={isLoading}>
+                {isLoading && <Loader2 className='animate-spin' />}
+                Login
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className='flex justify-center'>
+          <p className='text-sm text-muted-foreground'>
+            Do you not have an account?{' '}
+            <Link href='/register' className='text-primary hover:underline'>
+              Register
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+
+      {isShowResendVerifyEmail && (
+        <AccountActivation
+          email={form.getValues('email')}
+          isOpen={isShowResendVerifyEmail}
+          onClose={handleCloseResendVerifyEmail}
+        />
+      )}
+    </>
   )
 }
 

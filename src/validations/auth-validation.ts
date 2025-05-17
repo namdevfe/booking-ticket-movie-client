@@ -59,3 +59,23 @@ export const loginSchema = z.object({
     .min(1, { message: 'Password is required' })
     .min(6, { message: 'Password must be at least 6 characters' })
 })
+
+export const retryActiveSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'Email is required' })
+    .email({ message: 'Please enter a valid email address' })
+    .refine(
+      (email) => {
+        const parts = email.split('@')
+        const domain = parts[1]
+        return (
+          domain && domain.split('.').length >= 2 && domain.endsWith('.com')
+        )
+      },
+      {
+        message: 'Email must have at least 2 domain segments and end with .com'
+      }
+    )
+})
