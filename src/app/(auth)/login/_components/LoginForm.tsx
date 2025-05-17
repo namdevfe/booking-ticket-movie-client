@@ -105,10 +105,10 @@ const LoginForm = () => {
       <Card className='w-full max-w-md'>
         <CardHeader className='space-y-1'>
           <CardTitle className='text-2xl font-bold text-center'>
-            Login to system
+            Đăng nhập
           </CardTitle>
           <CardDescription className='text-center'>
-            Enter your information to login
+            Nhập thông tin đăng nhập của bạn
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -122,48 +122,52 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type='email'
-                        placeholder='example@gmail.com'
-                        {...field}
-                      />
+                      <Input type='email' placeholder='Nhập email' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='password'
-                        placeholder='Password'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className='flex flex-col gap-2'>
+                <FormField
+                  disabled={isLoading}
+                  control={form.control}
+                  name='password'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mật khẩu</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='password'
+                          placeholder='Nhập mật khẩu'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Link
+                  href='/forgot-password'
+                  className='text-right text-primary text-sm hover:underline'
+                >
+                  Quên mật khẩu?
+                </Link>
+              </div>
 
               <Button type='submit' className='w-full' disabled={isLoading}>
                 {isLoading && <Loader2 className='animate-spin' />}
-                Login
+                Đăng nhập
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className='flex justify-center'>
           <p className='text-sm text-muted-foreground'>
-            Do you not have an account?{' '}
+            Bạn chưa có tài khoản?{' '}
             <Link href='/register' className='text-primary hover:underline'>
-              Register
+              Đăng ký ngay
             </Link>
           </p>
         </CardFooter>

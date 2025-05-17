@@ -79,3 +79,38 @@ export const retryActiveSchema = z.object({
       }
     )
 })
+
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'Email is required' })
+    .email({ message: 'Please enter a valid email address' })
+    .refine(
+      (email) => {
+        const parts = email.split('@')
+        const domain = parts[1]
+        return (
+          domain && domain.split('.').length >= 2 && domain.endsWith('.com')
+        )
+      },
+      {
+        message: 'Email must have at least 2 domain segments and end with .com'
+      }
+    )
+})
+
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .trim()
+      .min(1, { message: 'Password is required' })
+      .min(6, { message: 'Password must be at least 6 characters' }),
+    confirmPassword: z.string(),
+    resetPasswordToken: z.string().min(1, { message: 'Code is required' })
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match.',
+    path: ['confirmPassword']
+  })

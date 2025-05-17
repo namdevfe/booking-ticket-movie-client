@@ -1,8 +1,10 @@
 import http from '@/lib/http'
 import {
+  ForgotPasswordPayload,
   LoginPayload,
   LoginRes,
   RegisterPayload,
+  ResetPasswordPayload,
   RetryActivePayload
 } from '@/types/auth-type'
 import { ApiResponse } from '@/types/global'
@@ -63,6 +65,14 @@ const authService = {
   retryActive(payload: RetryActivePayload) {
     const url = '/auth/retry-active'
     return http.post<ApiResponse>(url, payload)
+  },
+  forgotPassword(payload: ForgotPasswordPayload) {
+    const url = '/auth/forgot-password'
+    return http.post<ApiResponse>(url, payload)
+  },
+  resetPassword(payload: Omit<ResetPasswordPayload, 'confirmPassword'>) {
+    const url = '/auth/reset-password'
+    return http.put<ApiResponse>(url, payload)
   }
 }
 

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
-import './globals.css'
 import RefreshToken from '@/components/shared/RefreshToken'
+import './globals.css'
 
 const nunitoSans = Nunito_Sans({
   subsets: ['vietnamese']
