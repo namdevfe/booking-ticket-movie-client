@@ -1,5 +1,4 @@
 import { HTTP_STATUS_CODES } from '@/constants/http-status-code'
-import { ApiResponse } from '@/types/global'
 import { redirect } from 'next/navigation'
 
 type FetchOptions = RequestInit & {
@@ -69,10 +68,10 @@ const request = async <Response>(
         localStorage.removeItem('refreshToken')
 
         // Redirect to login page
-        location.href = '/login'
+        window.location.href = '/login'
       } else {
         const accessToken = baseHeaders?.Authorization?.split(' ')?.[1]
-        redirect(`/logout?accessToken=${accessToken}`)
+        return redirect(`/logout?accessToken=${accessToken}`)
       }
     }
     throw data

@@ -11,6 +11,10 @@ const ProfilePage = async () => {
 
   const profile = await authService.getProfile(accessToken)
 
+  if (!profile) {
+    return null
+  }
+
   return <div>Xin chào, {profile.data?.email}</div>
 }
 
