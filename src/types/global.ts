@@ -3,3 +3,7 @@ export interface ApiResponse<T = any> {
   message: string
   data?: T
 }
+
+export interface ApiError extends ApiResponse {
+  errors?: any[]
+}

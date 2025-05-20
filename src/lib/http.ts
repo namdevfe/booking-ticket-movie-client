@@ -1,5 +1,4 @@
 import { HTTP_STATUS_CODES } from '@/constants/http-status-code'
-import { redirect } from 'next/navigation'
 
 type FetchOptions = RequestInit & {
   baseUrl?: string
@@ -69,9 +68,6 @@ const request = async <Response>(
 
         // Redirect to login page
         window.location.href = '/login'
-      } else {
-        const accessToken = baseHeaders?.Authorization?.split(' ')?.[1]
-        return redirect(`/logout?accessToken=${accessToken}`)
       }
     }
     throw data

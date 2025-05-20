@@ -5,7 +5,8 @@ import RefreshToken from '@/components/shared/RefreshToken'
 import './globals.css'
 
 const nunitoSans = Nunito_Sans({
-  subsets: ['vietnamese']
+  subsets: ['vietnamese'],
+  display: 'fallback'
 })
 
 export const metadata: Metadata = {
