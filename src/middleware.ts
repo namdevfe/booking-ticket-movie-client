@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
     // Token is expired
     if (error.statusCode === HTTP_STATUS_CODES.UNAUTHORIZED) {
       return NextResponse.redirect(
-        new URL(`/logout?accessToken=${accessToken}`)
+        new URL(`/logout?accessToken=${accessToken}`, request.url)
       )
     }
   }

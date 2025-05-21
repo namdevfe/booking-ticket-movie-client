@@ -13,10 +13,35 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import useAppSelector from '@/hooks/use-app-selector'
+import useAppDispatch from '@/hooks/use-app-dispatch'
+import { logout } from '@/store/slices/auth-slice'
+import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
 
 const AdminHeader = () => {
+  const router = useRouter()
+  const { toast } = useToast()
+  const dispatch = useAppDispatch()
+  const profile = useAppSelector((state) => state.auth.profile)
+
+  const handleLogout = async () => {
+    try {
+      const res = await dispatch(logout()).unwrap()
+      if (res) {
+        router.push('/login')
+        toast({
+          title: 'Success',
+          description: 'Logout successfully. Thank you!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <header className='sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6'>
+    <header className='sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background px-6'>
       <SidebarTrigger className='hidden md:flex' />
 
       <div className='relative flex-1 max-w-md'>
@@ -65,21 +90,24 @@ const AdminHeader = () => {
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' className='rounded-full'>
               <Avatar>
-                <AvatarImage
-                  src='/placeholder.svg?height=32&width=32'
-                  alt='Admin'
-                />
-                <AvatarFallback>AD</AvatarFallback>
+                <AvatarImage alt={profile?.lastName.charAt(0)} />
+                <AvatarFallback>{profile?.lastName.charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer'>
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer'>
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer' onClick={handleLogout}>
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

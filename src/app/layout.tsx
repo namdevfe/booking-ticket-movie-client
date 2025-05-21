@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
-import RefreshToken from '@/components/shared/RefreshToken'
+import { RefreshToken, StoreProvider } from '@/components/shared'
 import './globals.css'
 
 const nunitoSans = Nunito_Sans({
   subsets: ['vietnamese'],
-  display: 'fallback'
+  display: 'swap'
 })
 
 export const metadata: Metadata = {
@@ -21,10 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body suppressHydrationWarning className={nunitoSans.className}>
-        <RefreshToken />
-        {children}
-        <Toaster />
+      <body className={nunitoSans.className} suppressHydrationWarning>
+        <StoreProvider>
+          <RefreshToken />
+          {children}
+          <Toaster />
+        </StoreProvider>
       </body>
     </html>
   )

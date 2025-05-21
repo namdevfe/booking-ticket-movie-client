@@ -1,12 +1,11 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Film,
   TicketCheck,
   Users,
   BarChart3,
-  Calendar,
   Settings,
   LogOut,
   Menu,
@@ -24,35 +23,33 @@ import {
   SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar'
+import useAppDispatch from '@/hooks/use-app-dispatch'
+import { logout } from '@/store/slices/auth-slice'
+import { useToast } from '@/hooks/use-toast'
 
 const sidebarItems = [
   {
-    title: 'Dashboard',
+    title: 'Tổng quan',
     icon: BarChart3,
     href: '/admin/dashboard'
   },
   {
-    title: 'Movies',
+    title: 'Quản lý phim',
     icon: Film,
     href: '/admin/movies'
   },
   {
-    title: 'Bookings',
+    title: 'Quản lý đặt vé',
     icon: TicketCheck,
     href: '/admin/bookings'
   },
   {
-    title: 'Customers',
+    title: 'Quản lý khách hàng',
     icon: Users,
     href: '/admin/customers'
   },
   {
-    title: 'Schedules',
-    icon: Calendar,
-    href: '/admin/schedules'
-  },
-  {
-    title: 'Settings',
+    title: 'Cài đặt',
     icon: Settings,
     href: '/admin/settings'
   }
@@ -61,6 +58,24 @@ const sidebarItems = [
 export default function AdminSidebar() {
   const pathname = usePathname()
   const { openMobile, setOpenMobile } = useSidebar()
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const { toast } = useToast()
+
+  const handleLogout = async () => {
+    try {
+      const res = await dispatch(logout()).unwrap()
+      if (res) {
+        router.push('/login')
+        toast({
+          title: 'Success',
+          description: 'Logout successfully. Thank you!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -109,7 +124,11 @@ export default function AdminSidebar() {
         </SidebarContent>
 
         <SidebarFooter className='p-4'>
-          <Button variant='outline' className='w-full justify-start gap-2'>
+          <Button
+            variant='outline'
+            className='w-full justify-start gap-2'
+            onClick={handleLogout}
+          >
             <LogOut className='h-4 w-4' />
             Logout
           </Button>
