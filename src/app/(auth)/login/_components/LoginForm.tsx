@@ -71,6 +71,7 @@ const LoginForm = () => {
 
         if (resFromNextServer.statusCode === 200) {
           toast({
+            variant: 'default',
             description: res.message
           })
 

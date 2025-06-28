@@ -7,8 +7,10 @@ export async function POST() {
 
   const refreshToken = cookieStore.get('refreshToken')?.value || ''
 
-  const payload = { refreshToken }
-  await authService.logout(payload)
+  if (refreshToken) {
+    const payload = { refreshToken }
+    await authService.logout(payload)
+  }
 
   // Clear cookies
   cookieStore.delete('accessToken')
