@@ -34,6 +34,11 @@ const sidebarItems = [
     href: '/admin/dashboard'
   },
   {
+    title: 'Quản lý rạp',
+    icon: Film,
+    href: '/admin/cinemas'
+  },
+  {
     title: 'Quản lý phim',
     icon: Film,
     href: '/admin/movies'

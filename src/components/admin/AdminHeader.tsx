@@ -25,6 +25,8 @@ const AdminHeader = () => {
   const dispatch = useAppDispatch()
   const profile = useAppSelector((state) => state.auth.profile)
 
+  const fullName = `${profile?.firstName} ${profile?.lastName}`
+
   const handleLogout = async () => {
     try {
       const res = await dispatch(logout()).unwrap()
@@ -90,8 +92,8 @@ const AdminHeader = () => {
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' className='rounded-full'>
               <Avatar>
-                <AvatarImage alt={profile?.lastName.charAt(0)} />
-                <AvatarFallback>{profile?.lastName.charAt(0)}</AvatarFallback>
+                <AvatarImage alt={fullName} />
+                <AvatarFallback>{fullName.split(' ')[fullName.split(' ').length - 1].charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>

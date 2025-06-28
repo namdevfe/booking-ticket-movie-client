@@ -4,7 +4,7 @@ import { Role } from '@/types/user-type'
 import { NextResponse, NextRequest } from 'next/server'
 
 const USER_PATHS = ['/profile']
-const ADMIN_PATHS = ['/admin/dashboard']
+const ADMIN_PATHS = ['/admin/dashboard', '/admin/cinemas']
 const AUTH_PATHS = [
   '/login',
   '/register',
@@ -41,9 +41,12 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/', request.url))
       }
 
+      const isAdmin = role === Role.ADMIN
+      const isUser = role === Role.USER
+
       // Cannot access admin pages if user has role is user
       if (
-        role === Role.USER &&
+        isUser &&
         ADMIN_PATHS.some((path) => path.startsWith(pathname))
       ) {
         return NextResponse.redirect(new URL('/access-denied', request.url))
@@ -51,11 +54,13 @@ export async function middleware(request: NextRequest) {
 
       // Cannot access user pages if user has role is admin
       if (
-        role === Role.ADMIN &&
+        isAdmin &&
         USER_PATHS.some((path) => path.startsWith(pathname))
       ) {
         return NextResponse.redirect(new URL('/access-denied', request.url))
       }
+
+      
     }
   } catch (error: any) {
     // Token is expired
